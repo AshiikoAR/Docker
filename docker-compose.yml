@@ -1,36 +1,29 @@
 services:
-  api:
-    build: ./api
-    ports:
-      - "3000:3000"
-    environment:
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=example
-      - DB_NAME=testdb
-    depends_on:
-      - db
-
-  db:
-    image: arm64v8/postgres:latest
-    environment:
-      POSTGRES_PASSWORD: example
-      POSTGRES_DB: testdb
-    ports:
-      - "5432:5432"
+  backend:
+    build: ./backend
+    container_name: backend
+    command: ["python", "-m", "app.main", "false"]
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ./backend:/code  # Mount the entire backend folder for the code
+      - ./backend/data:/code/data  # Mount only the data folder for SQLite persistence
 
+    ports:
+      - "8000:8000"
+  
   frontend:
     build: ./frontend
+    container_name: frontend
     ports:
-      - "8080:8080"
-    volumes:
-      - ./frontend:/app
+      - "3000:3000"
     depends_on:
-      - api
-    environment:
-      - VUE_APP_API_URL=http://api:3000
+      - backend
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    command: ["serve", "-s", "build", "-l", "tcp://0.0.0.0:3000"]
 
 volumes:
-  db_data:
+  sqlite_data:
+    driver: local

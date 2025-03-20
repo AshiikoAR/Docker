@@ -1,55 +1,85 @@
-# Docker
+# Application Docker - CRUD avec FastAPI, React et SQLite
 
-# Task Manager
+Application full-stack de gestion des fournisseurs (CRUD des données des fournisseurs : ), comprenant deux conteneurs **Docker** (Backend + Frontend). Elle utilise FastAPI pour le backend, React pour le frontend, SQLite pour la base de données et Docker pour la gestion des conteneurs.
 
-Création d’une application Docker de type « task manager » comprenant 2 conteneurs (ex : API + FRONTEND), utilisant « Vue.js ».
+## Pourquoi ce choix de technologies ?
+- **FastAPI** : Est un framework moderne, rapide et asynchrone pour construire des APIs en Python.
+- **React** : Une des bibliothèques JavaScript les plus populaires pour créer des interfaces utilisateur.
+- **SQLite** : Moteur de bdd simple/léger, parfait pour des applications de petite taille.
+- **Tabler** : Kit d'interface utilisateur basé sur Bootstrap 5, avec des composants réactifs et des mises en page variées.
+- **Docker** : Simplifie la configuration et le déploiement sur différents environnements.
 
-## Installation
+## Aperçu de l'architecture
+Ci-dessous un diagramme illustrant l'architecture du projet :  
+![Architecture du projet](https://github.com/Ashiiko/Docker/blob/main/schema-architecture.png)
 
-Instructions pour installer le projet.
+--- 
 
-1. Clonez le dépôt GitHub :
-   ```sh
-   git clone <URL_DU_DEPOT>
-   ```
-2. Naviguez dans le répertoire du projet :
-   ```sh
-   cd Docker
-   ```
-3. Assurez-vous d'avoir Docker et Docker Compose installés sur votre machine.
+# Comment utiliser ce modèle ?
+1. Clonez le dépôt.
+2. Lancez l'application avec Docker :
+```
+docker compose up --build -d
+```
 
-## Utilisation
+---
 
-Instructions pour utiliser le projet.
+# Gestion de la base de données
+La base de données SQLite est persistante grâce à l'utilisation d'un volume Docker. Vous pouvez trouver le fichier `sql_app.db` dans le dossier `backend/data`.
 
-1. Démarrez les conteneurs Docker :
-   ```sh
-   docker-compose up -d
-   ```
-2. Accédez à l'application frontend via `http://localhost:8080`.
-3. L'API est accessible via `http://localhost:3002`.
+---
 
-## Fonctionnalités
+# Backend
+## Structure des dossiers
+```
+|- backend
+|--- app
+|------ __init__.py
+|------ database.py   # Fichier de configuration de SQLite, moteur SQLAlchemy, Base, SessionLocal
+|------ main.py       # Point d'entrée de l'application FastAPI
+|------ models.py     # Modèles SQLAlchemy
+|--- routers
+|------ __init__.py
+|------ vendors.py    # Routeu/CRUD permettant de gérer les fournisseurs
+|--- data
+|------ sql_app.db    # Fichier de bdd SQLite
+|--- dockerfile       # Dockerfile pour containeriser l'application FastAPI
+|--- requirements.txt # Dépendances Python
+```
 
-- Ajouter une nouvelle tâche
-- Mettre à jour une tâche existante
-- Supprimer une tâche
-- Marquer une tâche comme terminée
-- Obtenir une tâche par ID
+## Fichiers importants
+- **database.py** : Configuration de la base de données SQLite et du moteur SQLAlchemy. Définit également `SessionLocal` pour la gestion des sessions et `Base` pour les modèles.
+- **main.py** : Point d'entrée principal de l'application FastAPI, où les routes API sont définies.
+- **models.py** : Définit les modèles de base de données avec SQLAlchemy.
+- **vendors.py** : Contient les opérations CRUD pour la ressource "fournisseur" avec FastAPI et SQLAlchemy.
+- **sql_app.db** : Fichier de base de données SQLite où toutes les données sont stockées.
+- **dockerfile** : Définit comment containeriser l'application FastAPI avec Docker.
 
-## Contribuer
+---
 
-Instructions pour contribuer au projet.
+# Frontend
+## Structure des dossiers
+```
+|- frontend
+|--- package.json
+|--- package-lock.json
+|--- dockerfile
+|--- src
+|------ app.js             # Routes de l'application
+|------ index.js           # Point d'entrée de l'appli React
+|------ Dashboard.js       # Liste des fournisseurs
+|------ components
+|--------- ConfirmForm.js  # Formulaire de confirmation de suppression d'un fournisseur
+|--------- FournForm.js    # Formulaire de création/modification un fournisseur
+|--------- FournTable.js   # Tableau des fournisseurs
+|--- public
+|------ index.html         # Inclut le CSS et la logique de base html
+|------ dist               
+|------ favicon            # Fichiers d'icones de l'outil
+```
 
-1. Forkez le dépôt.
-2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/AmazingFeature`).
-3. Commitez vos modifications (`git commit -m 'Add some AmazingFeature'`).
-4. Poussez votre branche (`git push origin feature/AmazingFeature`).
-5. Ouvrez une Pull Request.
-
-## Fichiers Importants
-
-- `docker-compose.yml` : Fichier de configuration pour Docker Compose.
-- `.env` : Fichier pour gérer les différentes variables d’environnement.
-
-Le but de cette application pour l’évaluateur est de pouvoir cloner le dépôt de l’application et lancer l’application à l’aide d’un simple « docker compose up -d » comme s’il était un nouveau dév qui intègre l’équipe.
+## Description
+- **Dashboard.js** utilise **FournTable.js** pour afficher un tableau des fournisseurs.  
+- Le bouton "Ajouter un fournisseur" ouvre **FournForm.js**, utilisé pour créer ou modifier un fournisseur.  
+- Le bouton "Supprimer" ouvre **ConfirmForm.js** pour confirmer la suppression.  
+- Le frontend utilise le thème "Tabler". Pour plus d'informations -> [Tabler](https://tabler.io/admin-template).
