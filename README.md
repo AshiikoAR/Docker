@@ -11,7 +11,7 @@ Application full-stack de gestion des fournisseurs (CRUD des données des fourni
 
 ## Aperçu de l'architecture
 Ci-dessous un diagramme illustrant l'architecture du projet :  
-![Architecture du projet](https://github.com/Ashiiko/Docker/blob/main/schema-architecture.png)
+![Architecture du projet](https://github.com/AshiikoAR/Docker/blob/main/schema-architecture.png)
 
 --- 
 
