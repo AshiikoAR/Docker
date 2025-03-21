@@ -1,21 +1,21 @@
-# 
+# Utiliser l'image officielle Python 3.9 comme base
 FROM python:3.9
 
-# 
+# Définir le répertoire de travail dans le conteneur
 WORKDIR /code
 
-# 
+# Copier le fichier requirements.txt dans le conteneur
 COPY ./requirements.txt /code/requirements.txt
 
-# 
+# Installer les dépendances Python sans utiliser le cache
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-# 
+# Copier le dossier app dans le conteneur
 COPY ./app /code/app
 
-#
+# Exposer le port 8000 pour le backend
 EXPOSE 8000
 
-#This will not be executed as we are using docker-compose
-#Add true or false argument for reload state. By default its false
-CMD ["python", "-m","app.main"] 
+# Cette commande ne sera pas exécutée car docker-compose la remplace
+# Ajouter un argument true ou false pour l'état de rechargement (par défaut false)
+CMD ["python", "-m","app.main"]

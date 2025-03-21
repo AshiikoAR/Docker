@@ -1,29 +1,28 @@
 services:
   backend:
-    build: ./backend
-    container_name: backend
-    command: ["python", "-m", "app.main", "false"]
+    build: ./backend  # Construire l'image Docker à partir du dossier backend
+    container_name: backend  # Nom du conteneur pour le backend
+    command: ["python", "-m", "app.main", "false"]  # Commande exécutée au démarrage du conteneur
     volumes:
-      - ./backend:/code  # Mount the entire backend folder for the code
-      - ./backend/data:/code/data  # Mount only the data folder for SQLite persistence
-
+      - ./backend:/code  # Monter tout le dossier backend dans le conteneur
+      - ./backend/data:/code/data  # Monter uniquement le dossier data pour la persistance SQLite
     ports:
-      - "8000:8000"
+      - "8000:8000"  # Mapper le port 8000 du conteneur au port 8000 de l'hôte
   
   frontend:
-    build: ./frontend
-    container_name: frontend
+    build: ./frontend  # Construire l'image Docker à partir du dossier frontend
+    container_name: frontend  # Nom du conteneur pour le frontend
     ports:
-      - "3000:3000"
+      - "3000:3000"  # Mapper le port 3000 du conteneur au port 3000 de l'hôte
     depends_on:
-      - backend
+      - backend  # Le conteneur frontend dépend du conteneur backend
     env_file:
-      - ./frontend/.env
+      - ./frontend/.env  # Charger les variables d'environnement depuis le fichier .env
     volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/public:/app/public
-    command: ["serve", "-s", "build", "-l", "tcp://0.0.0.0:3000"]
+      - ./frontend/src:/app/src  # Monter le dossier src dans le conteneur
+      - ./frontend/public:/app/public  # Monter le dossier public dans le conteneur
+    command: ["serve", "-s", "build", "-l", "tcp://0.0.0.0:3000"]  # Commande pour servir l'application
 
 volumes:
   sqlite_data:
-    driver: local
+    driver: local  # Utiliser un volume local pour la persistance des données SQLite
